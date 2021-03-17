@@ -7,6 +7,7 @@ import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.ContactsContract
+import androidx.core.view.isVisible
 import com.facebook.CallbackManager
 import com.facebook.FacebookCallback
 import com.facebook.FacebookException
@@ -14,6 +15,7 @@ import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.LoginResult
 import kotlinx.android.synthetic.main.activity_main.*
+import java.io.FileInputStream
 
 
 class MainActivity : AppCompatActivity() {
@@ -21,6 +23,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        imageView1.animate().rotation(360f).duration=3000
         btn2.setOnClickListener {
             //cookies
             var shard = getSharedPreferences("MyUserName",Context.MODE_PRIVATE)
@@ -39,10 +42,16 @@ class MainActivity : AppCompatActivity() {
 
 
         callbackManager = CallbackManager.Factory.create()
+        login_button.setOnClickListener {
+            btn2.isVisible=false
+            email.isVisible=false
+            pass.isVisible=false
+
+        }
         login_button.registerCallback(callbackManager, object : FacebookCallback<LoginResult>{
             override fun onSuccess(result: LoginResult?) {
-                textView.text = "Log in Successful ${result?.accessToken?.userId}"+
-                                                   "${result?.accessToken?.token}"
+                textView.text = "Log in Successful ${result?.accessToken?.userId}"
+
 
             }
 
@@ -73,4 +82,13 @@ class MainActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         callbackManager?.onActivityResult(requestCode,resultCode,data)
     }
+
+    override fun onBackPressed() {
+        btn2.isVisible=true
+        email.isVisible=true
+        pass.isVisible=true
+        super.onBackPressed()
+    }
+
+
 }
